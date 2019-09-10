@@ -133,7 +133,14 @@ class Image
 
     private function isValidImage($file)
     {
-        return exif_imagetype($file);
+        if (!function_exists( 'exif_imagetype') && 
+           (list($width, $height, $type, $attr) = getimagesize($file)) !== false ) {
+            return $type;
+        } elseif (filesize($file) > 11) {
+            return exif_imagetype($file);
+        } else {
+            return false;
+        }
     }
 
     /**
